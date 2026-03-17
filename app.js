@@ -395,7 +395,7 @@ const DailyEntry = {
     };
 
     build('gratitude-fields', 'g', 'I am grateful for…');
-    build('manifestation-fields', 'm', 'I intend to manifest…');
+    build('manifestation-fields', 'm', 'Dear Universe, I am having…');
   },
 
   bindEvents() {
