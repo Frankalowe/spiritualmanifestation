@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Spiritual Manifestations — Daily gratitude, manifestation tracking, and personal reflection app." />
+  <meta name="theme-color" content="#f7f3ef" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#1a1410" media="(prefers-color-scheme: dark)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Spiritual Manifestations</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===================== DASHBOARD PAGE ===================== -->
+  <section id="page-dashboard" class="page active">
+    <div class="top-bar">
+      <span class="logo">✦ Spiritual<br>Manifestations</span>
+      <div class="controls">
+        <button class="btn-icon" id="dark-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+      </div>
+    </div>
+
+    <!-- Motivational Quote -->
+    <div class="quote-card" id="quote-card">
+      <p class="quote-text" id="quote-text">Loading your daily wisdom…</p>
+      <p class="quote-author" id="quote-author"></p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number" id="stat-total">0</div>
+        <div class="stat-label">Days Done</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-streak">0</div>
+        <div class="stat-label">Current<br>Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-longest">0</div>
+        <div class="stat-label">Longest<br>Streak</div>
+      </div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="card">
+      <div class="calendar-header">
+        <button class="btn-icon" id="cal-prev" aria-label="Previous month">‹</button>
+        <span class="calendar-month" id="cal-month-label"></span>
+        <button class="btn-icon" id="cal-next" aria-label="Next month">›</button>
+      </div>
+      <div class="calendar-grid" id="cal-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Today CTA -->
+    <div class="today-cta">
+      <button class="btn btn-primary" id="dashboard-cta">✦ Begin Today's Practice</button>
+      <span class="today-status-text" id="today-status-text"></span>
+    </div>
+  </section>
+
+  <!-- ===================== DAILY ENTRY PAGE ===================== -->
+  <section id="page-entry" class="page">
+    <div class="page-header">
+      <h1>Today's Practice</h1>
+      <span class="text-muted" id="entry-date-label" style="font-size:0.8rem;"></span>
+    </div>
+
+    <!-- Readonly banner (shown when past date) -->
+    <div class="past-readonly-banner" id="past-readonly-banner" style="display:none;">
+      📅 Viewing a past entry — editing is only available on the same day.
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-gratitude" data-tab="gratitude">🌸 Gratitude</button>
+      <button class="tab-btn" id="tab-manifestations" data-tab="manifestations">🌟 Manifestations</button>
+    </div>
+
+    <!-- Gratitude Tab -->
+    <div class="tab-content active" id="content-gratitude">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-gratitude" style="width:0%"></div>
+      </div>
+      <p class="text-muted mt-4 mb-12" style="margin-bottom:16px;">I am grateful for…</p>
+      <div id="gratitude-fields"></div>
+    </div>
+
+    <!-- Manifestations Tab -->
+    <div class="tab-content" id="content-manifestations">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-manifestations" style="width:0%"></div>
+      </div>
+      <p class="text-muted mt-4 mb-12" style="margin-bottom:16px;">I want in my life…</p>
+      <div id="manifestation-fields"></div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-wrap" id="submit-wrap">
+      <button class="btn btn-primary" id="submit-btn" disabled>Save Today's Practice ✨</button>
+      <span class="submit-hint" id="submit-hint">Complete all 20 entries to save</span>
+    </div>
+  </section>
+
+  <!-- ===================== HISTORY PAGE ===================== -->
+  <section id="page-history" class="page">
+    <div class="page-header">
+      <h1>Past Entries</h1>
+    </div>
+
+    <!-- Mini Calendar for history -->
+    <div class="card history-cal-wrap">
+      <div class="calendar-header">
+        <button class="btn-icon" id="hist-cal-prev" aria-label="Previous month">‹</button>
+        <span class="calendar-month" id="hist-cal-month-label"></span>
+        <button class="btn-icon" id="hist-cal-next" aria-label="Next month">›</button>
+      </div>
+      <div class="calendar-grid" id="hist-cal-grid"></div>
+    </div>
+
+    <!-- Entry viewer -->
+    <div id="history-viewer">
+      <div class="empty-state">
+        <div class="empty-icon">📖</div>
+        <p>Select a date on the calendar above to view your past entries.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== RESULTS PAGE ===================== -->
+  <section id="page-results" class="page">
+    <div class="page-header">
+      <h1>Manifestation Results</h1>
+    </div>
+
+    <!-- Add Result Form -->
+    <div class="card add-result-form" id="add-result-form-card">
+      <h3 style="margin-bottom:16px;">✨ Log a Result</h3>
+      <div class="form-field">
+        <label class="form-label" for="result-desc">What came true?</label>
+        <textarea class="form-input entry-textarea" id="result-desc" rows="3" placeholder="Describe what manifested in your life…"></textarea>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="result-date">Date Achieved</label>
+        <input class="form-input" type="date" id="result-date" />
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="result-link">Link to Past Entry (optional)</label>
+        <select class="form-select" id="result-link">
+          <option value="">— None —</option>
+        </select>
+      </div>
+      <button class="btn btn-primary mt-12" id="result-save-btn" style="width:100%;">Save Result ✦</button>
+    </div>
+
+    <!-- Timeline -->
+    <div class="divider"></div>
+    <h3 style="margin-bottom:16px; font-family:'Cormorant Garamond',serif; font-weight:400;">Your Manifestation Journey</h3>
+    <div id="results-timeline">
+      <div class="empty-state">
+        <div class="empty-icon">🌟</div>
+        <p>Log your first manifestation result above — every achievement is a miracle worth recording.</p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- #app -->
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+  <button class="nav-item active" data-page="dashboard" id="nav-dashboard">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-item" data-page="entry" id="nav-entry">
+    <span class="nav-icon">✍️</span>
+    <span class="nav-label">Practice</span>
+  </button>
+  <button class="nav-item" data-page="history" id="nav-history">
+    <span class="nav-icon">📖</span>
+    <span class="nav-label">History</span>
+  </button>
+  <button class="nav-item" data-page="results" id="nav-results">
+    <span class="nav-icon">🌟</span>
+    <span class="nav-label">Results</span>
+  </button>
+</nav>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
