@@ -14,6 +14,45 @@
 </head>
 <body>
 
+<!-- ===================== ONBOARDING OVERLAY ===================== -->
+<div id="onboarding-overlay" class="onboarding-overlay" style="display:none;">
+  <div class="onboarding-container">
+    <div class="onboarding-slides" id="onboarding-slides">
+      <!-- Slide 1 -->
+      <div class="onboarding-slide active" data-slide="0">
+        <div class="onboarding-icon">✦</div>
+        <h2>Welcome to<br>Spiritual Manifestations</h2>
+        <p>Your sacred space for daily gratitude, manifestation, and personal growth.</p>
+      </div>
+      <!-- Slide 2 -->
+      <div class="onboarding-slide" data-slide="1">
+        <div class="onboarding-icon">🌸</div>
+        <h2>Daily Practice</h2>
+        <p>Write 10 gratitudes and 10 manifestations each day. Track your mood and journal your reflections.</p>
+      </div>
+      <!-- Slide 3 -->
+      <div class="onboarding-slide" data-slide="2">
+        <div class="onboarding-icon">📅</div>
+        <h2>Track Your Journey</h2>
+        <p>See your streaks, view past entries, and celebrate when your manifestations come true.</p>
+      </div>
+      <!-- Slide 4 -->
+      <div class="onboarding-slide" data-slide="3">
+        <div class="onboarding-icon">🏆</div>
+        <h2>Earn Badges</h2>
+        <p>Stay consistent and earn milestone badges. Set daily reminders so you never miss a practice.</p>
+      </div>
+    </div>
+    <div class="onboarding-dots" id="onboarding-dots">
+      <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+    </div>
+    <div class="onboarding-actions">
+      <button class="btn btn-primary" id="onboarding-next">Next →</button>
+      <button class="onboarding-skip" id="onboarding-skip">Skip</button>
+    </div>
+  </div>
+</div>
+
 <div id="app">
 
   <!-- ===================== DASHBOARD PAGE ===================== -->
@@ -22,6 +61,7 @@
       <span class="logo">✦ Spiritual<br>Manifestations</span>
       <div class="controls">
         <button class="btn-icon" id="dark-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+        <button class="btn-icon" id="settings-toggle" title="Settings" aria-label="Settings">⚙️</button>
       </div>
     </div>
 
@@ -29,22 +69,34 @@
     <div class="quote-card" id="quote-card">
       <p class="quote-text" id="quote-text">Loading your daily wisdom…</p>
       <p class="quote-author" id="quote-author"></p>
+      <button class="quote-share-btn" id="quote-share" title="Copy quote" aria-label="Copy quote">📋</button>
     </div>
 
     <!-- Stats -->
     <div class="stats-row">
       <div class="stat-card">
-        <div class="stat-number" id="stat-total">0</div>
+        <div class="stat-number" id="stat-total" data-target="0">0</div>
         <div class="stat-label">Days Done</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" id="stat-streak">0</div>
+        <div class="stat-number" id="stat-streak" data-target="0">0</div>
         <div class="stat-label">Current<br>Streak</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" id="stat-longest">0</div>
+        <div class="stat-number" id="stat-longest" data-target="0">0</div>
         <div class="stat-label">Longest<br>Streak</div>
       </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="badges-row" id="badges-row">
+      <!-- Rendered by JS -->
+    </div>
+
+    <!-- Weekly Summary -->
+    <div class="card weekly-summary-card" id="weekly-summary-card">
+      <h3 class="weekly-title">📊 Weekly Summary</h3>
+      <div id="weekly-summary-content"></div>
     </div>
 
     <!-- Calendar -->
@@ -78,10 +130,29 @@
       📅 Viewing a past entry — editing is only available on the same day.
     </div>
 
+    <!-- Auto-save indicator -->
+    <div class="autosave-indicator" id="autosave-indicator" style="display:none;">
+      <span class="autosave-dot"></span> Auto-saved
+    </div>
+
+    <!-- Mood Tracker -->
+    <div class="mood-tracker card" id="mood-tracker">
+      <p class="mood-label">How are you feeling today?</p>
+      <div class="mood-options" id="mood-options">
+        <button class="mood-btn" data-mood="amazing" title="Amazing">🤩</button>
+        <button class="mood-btn" data-mood="happy" title="Happy">😊</button>
+        <button class="mood-btn" data-mood="neutral" title="Neutral">😐</button>
+        <button class="mood-btn" data-mood="sad" title="Sad">😢</button>
+        <button class="mood-btn" data-mood="stressed" title="Stressed">😰</button>
+      </div>
+    </div>
+
     <!-- Tabs -->
     <div class="tab-bar">
       <button class="tab-btn active" id="tab-gratitude" data-tab="gratitude">🌸 Gratitude</button>
-      <button class="tab-btn" id="tab-manifestations" data-tab="manifestations">🌟 Manifestations</button>
+      <button class="tab-btn" id="tab-manifestations" data-tab="manifestations">🌟 Manifest</button>
+      <button class="tab-btn" id="tab-affirmations" data-tab="affirmations">💎 Affirm</button>
+      <button class="tab-btn" id="tab-journal" data-tab="journal">📝 Journal</button>
     </div>
 
     <!-- Gratitude Tab -->
@@ -100,6 +171,21 @@
       </div>
       <p class="text-muted mt-4 mb-12" style="margin-bottom:16px;">Dear Universe, I am having…</p>
       <div id="manifestation-fields"></div>
+    </div>
+
+    <!-- Affirmations Tab -->
+    <div class="tab-content" id="content-affirmations">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-affirmations" style="width:0%"></div>
+      </div>
+      <p class="text-muted mt-4 mb-12" style="margin-bottom:16px;">I affirm that…</p>
+      <div id="affirmation-fields"></div>
+    </div>
+
+    <!-- Journal Tab -->
+    <div class="tab-content" id="content-journal">
+      <p class="text-muted mt-4 mb-12" style="margin-bottom:16px;">Free-write your reflections, thoughts, and insights…</p>
+      <textarea class="journal-textarea entry-textarea" id="journal-textarea" rows="10" placeholder="Today I feel… I noticed… I'm learning…"></textarea>
     </div>
 
     <!-- Submit -->
@@ -152,12 +238,37 @@
         <input class="form-input" type="date" id="result-date" />
       </div>
       <div class="form-field">
+        <label class="form-label" for="result-category">Category</label>
+        <select class="form-select" id="result-category">
+          <option value="">— Select —</option>
+          <option value="health">🏥 Health & Wellness</option>
+          <option value="career">💼 Career & Finance</option>
+          <option value="relationships">💕 Relationships</option>
+          <option value="personal">🌱 Personal Growth</option>
+          <option value="spiritual">🙏 Spiritual</option>
+          <option value="material">🏠 Material</option>
+          <option value="other">✨ Other</option>
+        </select>
+      </div>
+      <div class="form-field">
         <label class="form-label" for="result-link">Link to Past Entry (optional)</label>
         <select class="form-select" id="result-link">
           <option value="">— None —</option>
         </select>
       </div>
       <button class="btn btn-primary mt-12" id="result-save-btn" style="width:100%;">Save Result ✦</button>
+    </div>
+
+    <!-- Filter by Category -->
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-chip active" data-filter="all">All</button>
+      <button class="filter-chip" data-filter="health">🏥</button>
+      <button class="filter-chip" data-filter="career">💼</button>
+      <button class="filter-chip" data-filter="relationships">💕</button>
+      <button class="filter-chip" data-filter="personal">🌱</button>
+      <button class="filter-chip" data-filter="spiritual">🙏</button>
+      <button class="filter-chip" data-filter="material">🏠</button>
+      <button class="filter-chip" data-filter="other">✨</button>
     </div>
 
     <!-- Timeline -->
@@ -170,6 +281,48 @@
       </div>
     </div>
   </section>
+
+  <!-- ===================== SETTINGS PANEL ===================== -->
+  <div class="settings-panel" id="settings-panel" style="display:none;">
+    <div class="settings-inner">
+      <div class="settings-header">
+        <h2>Settings</h2>
+        <button class="btn-icon" id="settings-close" aria-label="Close settings">✕</button>
+      </div>
+
+      <!-- Reminders -->
+      <div class="settings-section">
+        <h3>🔔 Daily Reminder</h3>
+        <p class="text-muted" style="margin-bottom:12px;">Get a notification to do your daily practice.</p>
+        <div class="reminder-toggle-wrap">
+          <label class="toggle-label" for="reminder-toggle">Enable Reminder</label>
+          <input type="checkbox" id="reminder-toggle" class="toggle-input" />
+          <label for="reminder-toggle" class="toggle-switch"></label>
+        </div>
+        <div class="reminder-time-wrap" id="reminder-time-wrap" style="display:none;">
+          <label class="form-label" for="reminder-time">Reminder Time</label>
+          <input type="time" class="form-input" id="reminder-time" value="08:00" />
+        </div>
+      </div>
+
+      <!-- Data Export/Import -->
+      <div class="settings-section">
+        <h3>📦 Data Management</h3>
+        <p class="text-muted" style="margin-bottom:12px;">Export or import your data for backup.</p>
+        <div class="settings-btn-group">
+          <button class="btn btn-ghost" id="export-data-btn">📥 Export Data</button>
+          <button class="btn btn-ghost" id="import-data-btn">📤 Import Data</button>
+          <input type="file" id="import-file-input" accept=".json" style="display:none;" />
+        </div>
+      </div>
+
+      <!-- Reset -->
+      <div class="settings-section">
+        <h3>⚠️ Danger Zone</h3>
+        <button class="btn btn-danger" id="reset-data-btn">Reset All Data</button>
+      </div>
+    </div>
+  </div>
 
 </div><!-- #app -->
 
@@ -192,6 +345,9 @@
     <span class="nav-label">Results</span>
   </button>
 </nav>
+
+<!-- Confetti Canvas -->
+<canvas id="confetti-canvas"></canvas>
 
 <!-- Toast -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
